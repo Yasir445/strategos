@@ -1,0 +1,2644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STRATEGOS — Geopolitical Intelligence & Market Signals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   STRATEGOS — PROFESSIONAL REDESIGN
+   Aesthetic: Editorial Luxury × Bloomberg Precision
+   Theme: Deep Navy + Champagne Gold + Arctic White
+   ============================================ */
+
+:root {
+  --navy-950: #03060f;
+  --navy-900: #060d1a;
+  --navy-800: #0a1628;
+  --navy-700: #0f2040;
+  --navy-600: #162d57;
+  --navy-500: #1e3d6e;
+  --gold-500: #c8a84b;
+  --gold-400: #d4b86a;
+  --gold-300: #e2cc94;
+  --gold-200: #f0e3c0;
+  --gold-dim: #7a6430;
+  --red-500: #c0392b;
+  --red-400: #e74c3c;
+  --red-glow: rgba(231,76,60,0.15);
+  --green-500: #0e6b3a;
+  --green-400: #16a85a;
+  --white: #f8f6f2;
+  --white-70: rgba(248,246,242,0.7);
+  --white-40: rgba(248,246,242,0.4);
+  --white-15: rgba(248,246,242,0.15);
+  --white-08: rgba(248,246,242,0.08);
+  --white-04: rgba(248,246,242,0.04);
+  --border: rgba(248,246,242,0.08);
+  --border-gold: rgba(200,168,75,0.25);
+  --shadow-gold: 0 0 60px rgba(200,168,75,0.08);
+  --shadow-card: 0 4px 32px rgba(0,0,0,0.4);
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'Courier Prime', 'Courier New', monospace;
+  --radius: 2px;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  background: var(--navy-950);
+  color: var(--white-70);
+  font-family: var(--font-body);
+  font-weight: 300;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* GRAIN TEXTURE */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9998;
+}
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--navy-900); }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+::selection { background: var(--gold-500); color: var(--navy-950); }
+
+/* ─── TICKER ──────────────────────────────── */
+.ticker-wrap {
+  background: var(--navy-800);
+  border-bottom: 1px solid var(--border);
+  padding: 0;
+  overflow: hidden;
+  height: 36px;
+  display: flex;
+  align-items: center;
+}
+.ticker-label {
+  flex-shrink: 0;
+  background: var(--gold-500);
+  color: var(--navy-950);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 0 16px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.ticker-track { overflow: hidden; flex: 1; }
+.ticker-inner {
+  display: inline-flex;
+  gap: 0;
+  animation: scroll-left 40s linear infinite;
+  white-space: nowrap;
+}
+.ticker-inner:hover { animation-play-state: paused; }
+@keyframes scroll-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 32px;
+  border-right: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--white-40);
+}
+.ticker-item .asset { color: var(--white); font-weight: 700; }
+.ticker-item .up { color: var(--green-400); }
+.ticker-item .dn { color: var(--red-400); }
+.ticker-item .alert-tag {
+  background: var(--red-glow);
+  color: var(--red-400);
+  border: 1px solid var(--red-500);
+  padding: 1px 8px;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+}
+
+/* ─── NAVIGATION ──────────────────────────── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  background: rgba(3,6,15,0.96);
+  backdrop-filter: blur(24px) saturate(1.5);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 48px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+}
+.nav-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.nav-wordmark {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--white);
+  letter-spacing: 0.06em;
+  font-style: italic;
+}
+.nav-wordmark span { color: var(--gold-500); }
+.nav-tagline {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--white-40);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
+}
+.nav-menu a {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--white-40);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  transition: color 0.2s, background 0.2s;
+  letter-spacing: 0.01em;
+}
+.nav-menu a:hover { color: var(--white); background: var(--white-08); }
+.nav-menu a.active { color: var(--gold-400); }
+.nav-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.nav-signin {
+  font-size: 13px;
+  color: var(--white-40);
+  text-decoration: none;
+  padding: 6px 14px;
+  transition: color 0.2s;
+}
+.nav-signin:hover { color: var(--white); }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+  border-radius: var(--radius);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+.btn-gold {
+  background: var(--gold-500);
+  color: var(--navy-950);
+  padding: 9px 20px;
+}
+.btn-gold:hover {
+  background: var(--gold-300);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(200,168,75,0.3);
+}
+.btn-outline {
+  background: transparent;
+  color: var(--white-70);
+  border: 1px solid var(--border);
+  padding: 9px 20px;
+}
+.btn-outline:hover { border-color: var(--gold-500); color: var(--gold-400); }
+.btn-ghost {
+  background: transparent;
+  color: var(--white-40);
+  padding: 9px 20px;
+}
+.btn-ghost:hover { color: var(--white); }
+
+/* ─── LIVE INDICATOR ──────────────────────── */
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--red-400);
+}
+.live-dot {
+  width: 6px; height: 6px;
+  background: var(--red-400);
+  border-radius: 50%;
+  animation: pulse 1.8s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(231,76,60,0.4); }
+  50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(231,76,60,0); }
+}
+
+/* ─── HERO ────────────────────────────────── */
+.hero {
+  position: relative;
+  min-height: 88vh;
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 48px;
+  gap: 64px;
+  align-items: center;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -100px;
+  left: -200px;
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(ellipse at center, rgba(14,32,64,0.6) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-kicker {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+.kicker-line {
+  width: 40px;
+  height: 1px;
+  background: var(--gold-500);
+}
+.kicker-text {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-400);
+}
+
+.hero-headline {
+  font-family: var(--font-display);
+  font-size: clamp(44px, 5.5vw, 80px);
+  font-weight: 400;
+  line-height: 1.05;
+  color: var(--white);
+  margin-bottom: 28px;
+  letter-spacing: -0.01em;
+}
+.hero-headline em {
+  font-style: italic;
+  color: var(--gold-400);
+}
+.hero-headline .line-break { display: block; }
+
+.hero-sub {
+  font-size: 17px;
+  font-weight: 300;
+  line-height: 1.75;
+  color: var(--white-70);
+  max-width: 520px;
+  margin-bottom: 44px;
+}
+
+.hero-cta-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 56px;
+}
+.btn-hero {
+  padding: 14px 32px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.hero-proof {
+  display: flex;
+  gap: 40px;
+  padding-top: 40px;
+  border-top: 1px solid var(--border);
+}
+.proof-stat {}
+.proof-num {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-style: italic;
+  color: var(--gold-400);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.proof-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--white-40);
+}
+
+/* HERO RIGHT — INTELLIGENCE PANEL */
+.hero-panel {
+  background: var(--navy-900);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: var(--shadow-card), var(--shadow-gold);
+  position: relative;
+}
+.hero-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold-500), var(--gold-300), var(--gold-500));
+}
+.panel-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.panel-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--white-40);
+}
+.panel-alerts { padding: 8px 0; }
+.alert-row {
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.2s;
+  cursor: default;
+  position: relative;
+}
+.alert-row:last-child { border-bottom: none; }
+.alert-row:hover { background: var(--white-04); }
+.alert-row::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+}
+.alert-row.critical::before { background: var(--red-400); }
+.alert-row.elevated::before { background: var(--gold-500); }
+.alert-row.watch::before { background: #3498db; }
+.alert-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+.alert-severity {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.alert-severity.critical { color: var(--red-400); }
+.alert-severity.elevated { color: var(--gold-400); }
+.alert-severity.watch { color: #5dade2; }
+.alert-time {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--white-40);
+  letter-spacing: 0.05em;
+}
+.alert-body {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--white-70);
+}
+.alert-body strong { color: var(--white); font-weight: 500; }
+
+/* SLIDE IN ANIMATION */
+.alert-row { opacity: 0; transform: translateX(12px); animation: slide-in 0.5s ease forwards; }
+.alert-row:nth-child(1) { animation-delay: 0.05s; }
+.alert-row:nth-child(2) { animation-delay: 0.15s; }
+.alert-row:nth-child(3) { animation-delay: 0.25s; }
+.alert-row:nth-child(4) { animation-delay: 0.35s; }
+.alert-row:nth-child(5) { animation-delay: 0.45s; }
+@keyframes slide-in { to { opacity: 1; transform: translateX(0); } }
+
+/* ─── MARKET BAR ──────────────────────────── */
+.market-bar {
+  background: var(--navy-900);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.market-bar-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 48px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+}
+.mkt {
+  padding: 20px 0;
+  text-align: center;
+  border-right: 1px solid var(--border);
+  transition: background 0.2s;
+  cursor: default;
+}
+.mkt:hover { background: var(--white-04); }
+.mkt:last-child { border-right: none; }
+.mkt-name {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--white-40);
+  margin-bottom: 5px;
+}
+.mkt-price {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-style: italic;
+  color: var(--white);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.mkt-change {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+}
+.mkt-change.up { color: var(--green-400); }
+.mkt-change.dn { color: var(--red-400); }
+
+/* ─── PAGE WRAPPER ────────────────────────── */
+.page-wrap {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 72px 48px;
+}
+
+/* ─── SECTION HEADER ──────────────────────── */
+.section-hdr {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.section-hdr-left {}
+.section-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-500);
+  margin-bottom: 6px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-style: italic;
+  color: var(--white);
+  letter-spacing: -0.01em;
+}
+.section-link {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--gold-500);
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: gap 0.2s;
+}
+.section-link:hover { gap: 12px; }
+.section-link::after { content: '→'; }
+
+/* ─── FEATURED ARTICLE ────────────────────── */
+.editorial-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 64px;
+  margin-bottom: 72px;
+}
+.featured {
+  padding-right: 64px;
+  border-right: 1px solid var(--border);
+}
+.article-cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  padding: 4px 10px;
+  border-radius: 2px;
+}
+.cat-conflict { color: var(--red-400); background: var(--red-glow); border: 1px solid rgba(231,76,60,0.2); }
+.cat-markets { color: var(--gold-400); background: rgba(200,168,75,0.1); border: 1px solid var(--border-gold); }
+.cat-analysis { color: #5dade2; background: rgba(52,152,219,0.1); border: 1px solid rgba(52,152,219,0.2); }
+.cat-energy { color: #a29bfe; background: rgba(162,155,254,0.1); border: 1px solid rgba(162,155,254,0.2); }
+.cat-qt { color: var(--green-400); background: rgba(22,168,90,0.1); border: 1px solid rgba(22,168,90,0.2); }
+
+.featured-title {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 2.8vw, 42px);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--white);
+  margin-bottom: 20px;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.featured-title:hover { color: var(--gold-300); }
+
+.featured-excerpt {
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--white-70);
+  margin-bottom: 28px;
+}
+
+.article-byline {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--white-40);
+  letter-spacing: 0.08em;
+  margin-bottom: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.byline-author { color: var(--white-70); font-weight: 700; }
+.byline-dot { color: var(--border); }
+.read-btn {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--gold-400);
+  text-decoration: none;
+  letter-spacing: 0.15em;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: gap 0.25s, color 0.2s;
+  text-transform: uppercase;
+}
+.read-btn::after { content: '→'; transition: transform 0.2s; }
+.read-btn:hover { gap: 14px; color: var(--gold-300); }
+
+/* ─── ARTICLE SIDEBAR ─────────────────────── */
+.article-sidebar {}
+.sidebar-art {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+  cursor: pointer;
+  margin: 0 -16px;
+  padding: 16px;
+  border-radius: 4px;
+}
+.sidebar-art:hover { background: var(--white-04); }
+.sidebar-art:last-child { border-bottom: none; }
+.sidebar-art-cat { margin-bottom: 8px; }
+.sidebar-art-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--white);
+  line-height: 1.35;
+  margin-bottom: 8px;
+  letter-spacing: -0.005em;
+  transition: color 0.2s;
+}
+.sidebar-art:hover .sidebar-art-title { color: var(--gold-300); }
+.sidebar-art-meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--white-40);
+  letter-spacing: 0.08em;
+}
+
+/* ─── ARTICLE CARD GRID ───────────────────── */
+.art-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-bottom: 72px;
+}
+.art-card {
+  background: var(--navy-950);
+  padding: 32px 28px;
+  cursor: pointer;
+  transition: background 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.art-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--gold-500);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  transform-origin: left;
+}
+.art-card:hover { background: var(--navy-900); }
+.art-card:hover::after { transform: scaleX(1); }
+.art-card-cat { margin-bottom: 14px; }
+.art-card-title {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--white);
+  margin-bottom: 12px;
+  letter-spacing: -0.005em;
+  transition: color 0.2s;
+}
+.art-card:hover .art-card-title { color: var(--gold-300); }
+.art-card-excerpt {
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--white-40);
+  margin-bottom: 20px;
+}
+.art-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.art-card-date {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--white-40);
+  letter-spacing: 0.08em;
+}
+.art-card-read {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--gold-500);
+  letter-spacing: 0.1em;
+}
+
+/* ─── PRICING ─────────────────────────────── */
+.pricing-section {
+  background: var(--navy-900);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 64px;
+  margin-bottom: 72px;
+  position: relative;
+  overflow: hidden;
+}
+.pricing-section::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-500), transparent);
+}
+.pricing-glow {
+  position: absolute;
+  top: -200px;
+  right: -200px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(ellipse, rgba(200,168,75,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+.pricing-hdr {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.pricing-hdr .section-eyebrow { justify-content: center; display: flex; margin-bottom: 12px; }
+.pricing-hdr-title {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-style: italic;
+  color: var(--white);
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+.pricing-hdr-sub {
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--white-70);
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  position: relative;
+  z-index: 1;
+}
+.price-card {
+  background: var(--navy-950);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 36px 32px;
+  position: relative;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.price-card:hover { border-color: var(--gold-dim); transform: translateY(-4px); }
+.price-card.featured-card {
+  border-color: var(--gold-500);
+  background: linear-gradient(160deg, var(--navy-800) 0%, var(--navy-950) 100%);
+}
+.price-card.featured-card:hover { border-color: var(--gold-300); }
+.featured-ribbon {
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--gold-500);
+  color: var(--navy-950);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 5px 20px;
+  border-radius: 0 0 4px 4px;
+}
+.price-tier {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--white-40);
+  margin-bottom: 20px;
+  margin-top: 8px;
+}
+.price-amount {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+.price-currency {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--white-40);
+}
+.price-num {
+  font-family: var(--font-display);
+  font-size: 52px;
+  font-style: italic;
+  color: var(--white);
+  line-height: 1;
+}
+.price-period {
+  font-size: 14px;
+  color: var(--white-40);
+  font-weight: 300;
+}
+.price-desc {
+  font-size: 13px;
+  color: var(--white-40);
+  line-height: 1.6;
+  margin-bottom: 28px;
+  min-height: 48px;
+}
+.price-divider {
+  height: 1px;
+  background: var(--border);
+  margin-bottom: 24px;
+}
+.price-features {
+  list-style: none;
+  margin-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.price-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--white-70);
+  font-weight: 300;
+}
+.feature-check {
+  color: var(--gold-500);
+  flex-shrink: 0;
+  margin-top: 1px;
+  font-size: 12px;
+}
+.feature-dash { color: var(--white-40); flex-shrink: 0; }
+.price-cta {
+  width: 100%;
+  padding: 13px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: var(--radius);
+  justify-content: center;
+}
+
+/* ─── STRIPE MODAL ────────────────────────── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(3,6,15,0.94);
+  backdrop-filter: blur(16px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.overlay.open { display: flex; }
+.modal-card {
+  background: var(--navy-900);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px;
+  position: relative;
+  overflow: hidden;
+  animation: modal-rise 0.35s cubic-bezier(0.16,1,0.3,1) both;
+}
+@keyframes modal-rise {
+  from { opacity: 0; transform: translateY(32px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.modal-top-bar {
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold-500), var(--gold-300));
+}
+.modal-body { padding: 40px; }
+.modal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: var(--white-08);
+  border: none;
+  color: var(--white-70);
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  line-height: 1;
+}
+.modal-close-btn:hover { background: var(--white-15); }
+.modal-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold-500);
+  margin-bottom: 10px;
+}
+.modal-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-style: italic;
+  color: var(--white);
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+.modal-sub {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--white-70);
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+.form-group { margin-bottom: 14px; }
+.form-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--white-40);
+  margin-bottom: 6px;
+}
+.form-input {
+  width: 100%;
+  background: var(--navy-950);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--white);
+  padding: 11px 14px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 300;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-input:focus {
+  border-color: var(--gold-500);
+  box-shadow: 0 0 0 3px rgba(200,168,75,0.1);
+}
+.form-input::placeholder { color: var(--white-40); }
+.form-select {
+  width: 100%;
+  background: var(--navy-950);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--white);
+  padding: 11px 14px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 300;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  transition: border-color 0.2s;
+}
+.form-select:focus { border-color: var(--gold-500); outline: none; }
+.form-select option { background: var(--navy-900); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* STRIPE CARD ELEMENT SIMULATION */
+.stripe-element {
+  background: var(--navy-950);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 11px 14px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--white-40);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: text;
+  transition: border-color 0.2s;
+  position: relative;
+}
+.stripe-element:focus-within { border-color: var(--gold-500); }
+.stripe-element input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--white);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  flex: 1;
+  letter-spacing: 0.08em;
+}
+.stripe-element input::placeholder { color: var(--white-40); }
+.stripe-card-icon { color: var(--white-40); font-size: 16px; }
+
+.stripe-secure {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: rgba(22,168,90,0.06);
+  border: 1px solid rgba(22,168,90,0.15);
+  border-radius: var(--radius);
+}
+.stripe-secure-icon { color: var(--green-400); font-size: 12px; }
+.stripe-secure-text {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--green-400);
+  letter-spacing: 0.08em;
+}
+.stripe-logo {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--white-40);
+  letter-spacing: 0.05em;
+}
+
+.submit-btn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 15px;
+  font-size: 14px;
+  font-weight: 500;
+  justify-content: center;
+  border-radius: var(--radius);
+  letter-spacing: 0.02em;
+  position: relative;
+}
+.submit-btn .btn-arrow { transition: transform 0.2s; }
+.submit-btn:hover .btn-arrow { transform: translateX(4px); }
+.modal-terms {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--white-40);
+  text-align: center;
+  margin-top: 14px;
+  line-height: 1.6;
+  letter-spacing: 0.03em;
+}
+.modal-terms a { color: var(--gold-500); text-decoration: none; }
+
+/* Plan toggle */
+.plan-toggle {
+  display: flex;
+  gap: 1px;
+  background: var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.toggle-opt {
+  flex: 1;
+  text-align: center;
+  padding: 9px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--white-40);
+  background: var(--navy-950);
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+.toggle-opt.active {
+  background: var(--gold-500);
+  color: var(--navy-950);
+  font-weight: 700;
+}
+
+/* Price summary */
+.price-summary {
+  background: var(--navy-950);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 20px;
+}
+.price-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--white-70);
+  margin-bottom: 8px;
+}
+.price-summary-row:last-child {
+  margin-bottom: 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-weight: 500;
+  color: var(--white);
+  font-size: 15px;
+}
+.price-summary-row span:last-child { font-family: var(--font-mono); }
+
+/* SUCCESS STATE */
+.success-state {
+  text-align: center;
+  padding: 20px 0;
+  display: none;
+}
+.success-icon {
+  width: 64px; height: 64px;
+  background: rgba(22,168,90,0.1);
+  border: 1px solid rgba(22,168,90,0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 28px;
+}
+.success-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-style: italic;
+  color: var(--white);
+  margin-bottom: 10px;
+}
+.success-sub {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--white-70);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+/* ─── THREAT + SIGNALS SIDEBAR ────────────── */
+.intel-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 64px;
+}
+.intel-main {}
+.intel-sidebar {}
+
+.threat-panel {
+  background: var(--navy-900);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 28px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.threat-panel::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--red-500), transparent);
+}
+.threat-level-num {
+  font-family: var(--font-display);
+  font-size: 72px;
+  font-style: italic;
+  color: var(--red-400);
+  line-height: 1;
+  margin-bottom: 0;
+}
+.threat-label-text {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--white-40);
+  margin-bottom: 20px;
+}
+.threat-meter-bar {
+  height: 4px;
+  background: var(--navy-700);
+  border-radius: 2px;
+  margin-bottom: 12px;
+  position: relative;
+  overflow: visible;
+}
+.threat-fill {
+  height: 100%;
+  width: 82%;
+  background: linear-gradient(90deg, var(--green-400), var(--gold-500) 50%, var(--red-400));
+  border-radius: 2px;
+  position: relative;
+}
+.threat-fill::after {
+  content: '';
+  position: absolute;
+  right: -5px;
+  top: -4px;
+  width: 12px; height: 12px;
+  background: var(--red-400);
+  border-radius: 50%;
+  border: 2px solid var(--navy-900);
+  box-shadow: 0 0 10px rgba(231,76,60,0.5);
+}
+.threat-note {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--white-40);
+  letter-spacing: 0.08em;
+}
+
+.signal-list { margin-bottom: 24px; }
+.signal-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.15s;
+  margin: 0 -4px;
+  padding-left: 4px;
+  padding-right: 4px;
+  border-radius: var(--radius);
+}
+.signal-item:hover { background: var(--white-04); }
+.signal-item:last-child { border-bottom: none; }
+.signal-emoji {
+  width: 38px; height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--white-04);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.signal-info {}
+.signal-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--white);
+  margin-bottom: 2px;
+}
+.signal-desc {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--white-40);
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  margin-bottom: 5px;
+}
+.sig-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 2px;
+}
+.sig-bull { background: rgba(22,168,90,0.1); color: var(--green-400); border: 1px solid rgba(22,168,90,0.2); }
+.sig-bear { background: var(--red-glow); color: var(--red-400); border: 1px solid rgba(231,76,60,0.2); }
+.sig-watch { background: rgba(200,168,75,0.1); color: var(--gold-400); border: 1px solid var(--border-gold); }
+
+/* EVENTS */
+.event-list {}
+.event-row {
+  display: flex;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.15s;
+  margin: 0 -4px;
+  padding-left: 4px;
+  border-radius: var(--radius);
+}
+.event-row:hover { background: var(--white-04); }
+.event-row:last-child { border-bottom: none; }
+.event-cal {
+  flex-shrink: 0;
+  width: 44px;
+  text-align: center;
+  background: var(--white-04);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 6px 4px;
+}
+.event-cal-day {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-style: italic;
+  color: var(--gold-400);
+  line-height: 1;
+}
+.event-cal-mo {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--white-40);
+  margin-top: 2px;
+}
+.event-info {}
+.event-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--white);
+  margin-bottom: 3px;
+}
+.event-detail {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--white-40);
+  line-height: 1.4;
+  letter-spacing: 0.03em;
+  margin-bottom: 5px;
+}
+.event-impact-badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.imp-high { color: var(--red-400); }
+.imp-med { color: var(--gold-400); }
+
+/* NEWSLETTER PANEL */
+.nl-panel {
+  background: linear-gradient(140deg, var(--navy-800), var(--navy-900));
+  border: 1px solid var(--border-gold);
+  border-radius: 4px;
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+}
+.nl-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-500), transparent);
+}
+.nl-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-style: italic;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+.nl-sub {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--white-70);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.nl-input-wrap { position: relative; margin-bottom: 10px; }
+.nl-input {
+  width: 100%;
+  background: var(--navy-950);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--white);
+  padding: 11px 14px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 300;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.nl-input:focus { border-color: var(--gold-500); }
+.nl-input::placeholder { color: var(--white-40); }
+.nl-btn {
+  width: 100%;
+  padding: 11px;
+  font-size: 13px;
+  font-weight: 500;
+  justify-content: center;
+  border-radius: var(--radius);
+}
+.nl-fine {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--white-40);
+  letter-spacing: 0.06em;
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* SPONSOR PANEL */
+.sponsor-panel {
+  background: var(--navy-950);
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+  padding: 24px;
+  text-align: center;
+  margin-top: 24px;
+}
+.sponsor-tag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--white-40);
+  display: block;
+  margin-bottom: 12px;
+}
+.sponsor-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  color: var(--white-70);
+  margin-bottom: 8px;
+}
+.sponsor-desc {
+  font-size: 12px;
+  color: var(--white-40);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+.sponsor-cta-btn {
+  width: 100%;
+  padding: 9px;
+  font-size: 12px;
+  justify-content: center;
+  border-radius: var(--radius);
+}
+
+/* ─── FOOTER ──────────────────────────────── */
+footer {
+  background: var(--navy-900);
+  border-top: 1px solid var(--border);
+  margin-top: 0;
+}
+.footer-main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 72px 48px 48px;
+  display: grid;
+  grid-template-columns: 2.5fr 1fr 1fr 1fr;
+  gap: 64px;
+}
+.footer-brand-name {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-style: italic;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+.footer-brand-name span { color: var(--gold-500); }
+.footer-brand-tagline {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--white-40);
+  margin-bottom: 20px;
+}
+.footer-brand-desc {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--white-40);
+  line-height: 1.75;
+  max-width: 300px;
+  margin-bottom: 28px;
+}
+.footer-col-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-500);
+  margin-bottom: 20px;
+}
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-links a {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--white-40);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--white-70); }
+.footer-bottom-bar {
+  border-top: 1px solid var(--border);
+  padding: 24px 48px;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 48px;
+}
+.footer-copyright {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--white-40);
+  letter-spacing: 0.08em;
+  flex-shrink: 0;
+}
+.footer-disclaimer {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: rgba(248,246,242,0.18);
+  line-height: 1.6;
+  letter-spacing: 0.03em;
+  text-align: right;
+}
+
+/* ─── ANIMATIONS ──────────────────────────── */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal.in { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* ─── PAYWALL BLUR ────────────────────────── */
+.paywall-teaser {
+  position: relative;
+  overflow: hidden;
+  max-height: 220px;
+}
+.paywall-teaser-text {
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--white-70);
+  font-weight: 300;
+}
+.paywall-blur-overlay {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 140px;
+  background: linear-gradient(to bottom, transparent, var(--navy-900));
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 16px;
+}
+
+/* ─── RESPONSIVE ──────────────────────────── */
+@media (max-width: 1024px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero-panel { display: none; }
+  .editorial-layout { grid-template-columns: 1fr; }
+  .featured { padding-right: 0; border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 48px; margin-bottom: 48px; }
+  .art-grid { grid-template-columns: 1fr 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .intel-layout { grid-template-columns: 1fr; }
+  .intel-sidebar { display: none; }
+  .footer-main { grid-template-columns: 1fr 1fr; gap: 40px; }
+  .market-bar-inner { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 700px) {
+  .nav-inner { padding: 0 20px; }
+  .nav-menu { display: none; }
+  .page-wrap { padding: 48px 20px; }
+  .hero { padding: 0 20px; min-height: auto; padding-top: 60px; padding-bottom: 60px; }
+  .art-grid { grid-template-columns: 1fr; }
+  .pricing-section { padding: 40px 24px; }
+  .market-bar-inner { padding: 0 20px; grid-template-columns: repeat(2, 1fr); }
+  .footer-main { grid-template-columns: 1fr; padding: 40px 20px 32px; }
+  .footer-bottom-bar { flex-direction: column; padding: 20px; }
+  .footer-disclaimer { text-align: left; }
+  .form-row { grid-template-columns: 1fr; }
+  .modal-body { padding: 28px 24px; }
+}
+
+/* ─── AI LOADING STATES ───────────────────────────────────── */
+.ai-spinner {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 2px solid var(--border);
+  border-top-color: var(--gold-500);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.ai-loading-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 24px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--white-40);
+  letter-spacing: 0.1em;
+}
+
+.ai-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  background: rgba(200,168,75,0.1);
+  border: 1px solid var(--border-gold);
+  color: var(--gold-400);
+  border-radius: 2px;
+  margin-left: 8px;
+}
+
+.content-refresh-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0 20px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--white-40);
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+.refresh-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--gold-400);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  padding: 4px 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 2px;
+}
+.refresh-btn:hover { background: var(--white-08); border-color: var(--gold-500); }
+.refresh-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Skeleton shimmer for loading placeholders */
+.skeleton {
+  background: linear-gradient(90deg, var(--white-04) 25%, var(--white-08) 50%, var(--white-04) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 2px;
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+</style>
+</head>
+<body>
+
+<!-- ═══ TICKER ═══════════════════════════════════════════════ -->
+<div class="ticker-wrap">
+  <div class="ticker-label">Live Markets</div>
+  <div class="ticker-track">
+    <div class="ticker-inner" id="tickerInner">
+      <!-- JS will inject live ticker items here -->
+    </div>
+  </div>
+</div>
+
+<!-- ═══ NAVIGATION ═══════════════════════════════════════════ -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-brand">
+      <span class="nav-wordmark">Strat<span>e</span>gos</span>
+      <span class="nav-tagline">Intelligence · Markets · Signals</span>
+    </a>
+    <ul class="nav-menu">
+      <li><a href="#intelligence" class="active">Intelligence</a></li>
+      <li><a href="#markets">Markets</a></li>
+      <li><a href="#signals">Signals</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="#" class="nav-signin">Sign In</a>
+      <button class="btn btn-outline" onclick="openModal('free')">Free Briefing</button>
+      <button class="btn btn-gold" onclick="openModal('pro')">Get Pro Access</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ HERO ══════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-kicker">
+      <div class="kicker-line"></div>
+      <div class="live-badge"><div class="live-dot"></div> Live Intelligence — May 6, 2026</div>
+    </div>
+
+    <h1 class="hero-headline">
+      <span class="line-break">The World is at</span>
+      <em>Inflection Point.</em>
+      <span class="line-break">Are You Positioned?</span>
+    </h1>
+
+    <p class="hero-sub">Institutional-grade geopolitical intelligence, real-time conflict analysis, and market signals — delivered before it reaches mainstream media. Built for traders, investors, and informed decision-makers.</p>
+
+    <div class="hero-cta-group">
+      <button class="btn btn-gold btn-hero" onclick="openModal('free')">Start Free Briefing</button>
+      <button class="btn btn-outline btn-hero" onclick="openModal('pro')">View Pro Plans</button>
+    </div>
+
+    <div class="hero-proof">
+      <div class="proof-stat">
+        <div class="proof-num">28,210</div>
+        <div class="proof-label">US100 Live</div>
+      </div>
+      <div class="proof-stat">
+        <div class="proof-num">$4,652</div>
+        <div class="proof-label">Gold XAU/USD</div>
+      </div>
+      <div class="proof-stat">
+        <div class="proof-num">82</div>
+        <div class="proof-label">Threat Index / 100</div>
+      </div>
+      <div class="proof-stat">
+        <div class="proof-num">56+</div>
+        <div class="proof-label">Active Conflicts</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIVE ALERTS PANEL -->
+  <div class="hero-panel">
+    <div class="panel-header">
+      <span class="panel-title">Live Conflict Alerts</span>
+      <div class="live-badge"><div class="live-dot"></div> Real-time</div>
+    </div>
+    <div class="panel-alerts" id="alertsPanel"><div class="ai-loading-row"><span class="ai-spinner"></span>Fetching live intelligence...</div></div>
+  </div>
+</section>
+
+<!-- ═══ MARKET BAR ════════════════════════════════════════════ -->
+<div class="market-bar" id="markets">
+  <div class="market-bar-inner" id="marketBarInner" style="grid-template-columns:repeat(8,1fr);">
+    <div class="mkt"><div class="mkt-name">US100</div><div class="mkt-price" id="mkt-US100">—</div><div class="mkt-change" id="chg-US100">loading</div></div>
+    <div class="mkt"><div class="mkt-name">US30</div><div class="mkt-price" id="mkt-US30">—</div><div class="mkt-change" id="chg-US30">loading</div></div>
+    <div class="mkt"><div class="mkt-name">S&P 500</div><div class="mkt-price" id="mkt-SPX">—</div><div class="mkt-change" id="chg-SPX">loading</div></div>
+    <div class="mkt"><div class="mkt-name">Gold XAU/USD</div><div class="mkt-price" id="mkt-GOLD">—</div><div class="mkt-change" id="chg-GOLD">loading</div></div>
+    <div class="mkt"><div class="mkt-name">Silver</div><div class="mkt-price" id="mkt-SILVER">—</div><div class="mkt-change" id="chg-SILVER">loading</div></div>
+    <div class="mkt"><div class="mkt-name">BTC/USD</div><div class="mkt-price" id="mkt-BTC">—</div><div class="mkt-change" id="chg-BTC">loading</div></div>
+    <div class="mkt"><div class="mkt-name">EUR/USD</div><div class="mkt-price" id="mkt-EUR">—</div><div class="mkt-change" id="chg-EUR">loading</div></div>
+    <div class="mkt"><div class="mkt-name">GBP/USD</div><div class="mkt-price" id="mkt-GBP">—</div><div class="mkt-change" id="chg-GBP">loading</div></div>
+  </div>
+  <div style="text-align:center;padding:4px 0;font-family:var(--font-mono);font-size:9px;color:var(--white-40);letter-spacing:0.1em;" id="lastUpdated">Fetching live data...</div>
+</div>
+
+<!-- ═══ MAIN CONTENT ══════════════════════════════════════════ -->
+<div class="page-wrap" id="intelligence">
+
+  <!-- FEATURED + SIDEBAR ARTICLES -->
+  <div class="section-hdr reveal">
+    <div class="section-hdr-left">
+      <div class="section-eyebrow">Today's Briefing</div>
+      <div class="section-title">Lead Intelligence Reports</div>
+    </div>
+    <a href="#pricing" class="section-link">View All Reports</a>
+  </div>
+
+  <!-- AI CONTENT ENGINE STATUS BAR -->
+  <div class="content-refresh-bar" id="contentStatusBar">
+    <span id="contentStatusText"><span class="ai-spinner" style="width:10px;height:10px;border-width:1.5px;vertical-align:middle;margin-right:6px;"></span> AI generating live intelligence briefing...</span>
+    <button class="refresh-btn" id="refreshBtn" onclick="refreshAllContent()" disabled>↻ Refresh</button>
+  </div>
+
+  <div class="editorial-layout reveal reveal-delay-1" id="editorialLayout">
+    <div class="featured" id="featuredArticle">
+      <div style="display:flex;align-items:center;gap:12px;padding:40px 0;color:var(--white-40);">
+        <span class="ai-spinner"></span>
+        <span style="font-family:var(--font-mono);font-size:12px;letter-spacing:0.1em;">AI generating today's lead intelligence report...</span>
+      </div>
+    </div>
+    <div class="article-sidebar" id="sidebarArticles">
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--white-40);padding:20px 0;"><span class="ai-spinner"></span> Loading...</div>
+    </div>
+  </div>
+
+  <!-- ARTICLE GRID -->
+  <div class="section-hdr reveal">
+    <div class="section-hdr-left">
+      <div class="section-eyebrow">Deep Analysis</div>
+      <div class="section-title">Intelligence Archive</div>
+    </div>
+    <a href="#pricing" class="section-link">Full Library</a>
+  </div>
+
+  <div class="art-grid reveal reveal-delay-1" id="artGrid">
+    <div class="art-card" style="grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:12px;padding:40px;color:var(--white-40);">
+      <span class="ai-spinner"></span>
+      <span style="font-family:var(--font-mono);font-size:12px;letter-spacing:0.1em;">AI generating intelligence archive...</span>
+    </div>
+  </div>
+
+  <!-- INTEL + SIDEBAR LAYOUT -->
+  <div class="intel-layout" id="signals">
+    <div class="intel-main">
+      <!-- PRICING SECTION -->
+      <div class="pricing-section reveal" id="pricing">
+        <div class="pricing-glow"></div>
+        <div class="pricing-hdr">
+          <div class="section-eyebrow">Membership</div>
+          <h2 class="pricing-hdr-title">Intelligence That Pays For Itself</h2>
+          <p class="pricing-hdr-sub">Every plan includes the daily morning briefing. Upgrade for full analysis, trade signals, and early warning intelligence that moves before markets open.</p>
+        </div>
+        <div class="pricing-grid">
+          <!-- FREE -->
+          <div class="price-card">
+            <div class="price-tier">Free</div>
+            <div class="price-amount">
+              <span class="price-currency">$</span>
+              <span class="price-num">0</span>
+              <span class="price-period">/month</span>
+            </div>
+            <p class="price-desc">Everything you need to stay informed on the big picture.</p>
+            <div class="price-divider"></div>
+            <ul class="price-features">
+              <li><span class="feature-check">✓</span> Daily headline briefing</li>
+              <li><span class="feature-check">✓</span> Live conflict alerts</li>
+              <li><span class="feature-check">✓</span> Market data dashboard</li>
+              <li><span class="feature-check">✓</span> Weekly newsletter</li>
+              <li><span class="feature-dash">—</span> <span style="opacity:0.4">Full analysis reports</span></li>
+              <li><span class="feature-dash">—</span> <span style="opacity:0.4">Trade signals & levels</span></li>
+            </ul>
+            <button class="btn btn-outline price-cta" onclick="openModal('free')">Start Free →</button>
+          </div>
+
+          <!-- PRO -->
+          <div class="price-card featured-card">
+            <div class="featured-ribbon">Most Popular</div>
+            <div class="price-tier">Pro Analyst</div>
+            <div class="price-amount">
+              <span class="price-currency">$</span>
+              <span class="price-num">29</span>
+              <span class="price-period">/month</span>
+            </div>
+            <p class="price-desc">Full intelligence access with QT trade setups and early warning signals.</p>
+            <div class="price-divider"></div>
+            <ul class="price-features">
+              <li><span class="feature-check">✓</span> Everything in Free</li>
+              <li><span class="feature-check">✓</span> Full daily intelligence reports</li>
+              <li><span class="feature-check">✓</span> QT trade setups & price levels</li>
+              <li><span class="feature-check">✓</span> Early warning signal matrix</li>
+              <li><span class="feature-check">✓</span> May 8 scenario analysis</li>
+              <li><span class="feature-check">✓</span> Inflation positioning guide</li>
+              <li><span class="feature-check">✓</span> Telegram alert channel</li>
+            </ul>
+            <button class="btn btn-gold price-cta" onclick="openModal('pro')">Get Pro Access →</button>
+          </div>
+
+          <!-- INSTITUTIONAL -->
+          <div class="price-card">
+            <div class="price-tier">Institutional</div>
+            <div class="price-amount">
+              <span class="price-currency">$</span>
+              <span class="price-num">99</span>
+              <span class="price-period">/month</span>
+            </div>
+            <p class="price-desc">For funds, family offices, and serious capital allocators.</p>
+            <div class="price-divider"></div>
+            <ul class="price-features">
+              <li><span class="feature-check">✓</span> Everything in Pro</li>
+              <li><span class="feature-check">✓</span> Private analyst briefings</li>
+              <li><span class="feature-check">✓</span> Custom scenario modeling</li>
+              <li><span class="feature-check">✓</span> API data feed access</li>
+              <li><span class="feature-check">✓</span> Multi-seat team license</li>
+              <li><span class="feature-check">✓</span> Priority research requests</li>
+              <li><span class="feature-check">✓</span> White-label reports</li>
+            </ul>
+            <button class="btn btn-outline price-cta" onclick="openModal('institutional')">Contact Sales →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTELLIGENCE SIDEBAR -->
+    <div class="intel-sidebar reveal">
+
+      <!-- THREAT METER -->
+      <div class="threat-panel">
+        <div class="section-eyebrow" style="margin-bottom:12px;">Global Threat Index</div>
+        <div class="threat-level-num">82</div>
+        <div class="threat-label-text">/ 100 — Severe</div>
+        <div class="threat-meter-bar">
+          <div class="threat-fill"></div>
+        </div>
+        <div class="threat-note">Highest since 2003 Iraq War · Updated daily</div>
+      </div>
+
+      <!-- SIGNALS -->
+      <div style="margin-bottom:32px;">
+        <div class="section-eyebrow" style="margin-bottom:16px;">Market Signals</div>
+        <div class="signal-list">
+          <div class="signal-item">
+            <div class="signal-emoji">🛢️</div>
+            <div class="signal-info">
+              <div class="signal-name">Oil — Outside Gulf</div>
+              <div class="signal-desc">US, Norway, Brazil producers benefit regardless of outcome</div>
+              <span class="sig-badge sig-bull">▲ Bullish</span>
+            </div>
+          </div>
+          <div class="signal-item">
+            <div class="signal-emoji">🛡️</div>
+            <div class="signal-info">
+              <div class="signal-name">Defense Sector</div>
+              <div class="signal-desc">RTX, LMT, NOC — multi-year government spending tailwind</div>
+              <span class="sig-badge sig-bull">▲ Bullish</span>
+            </div>
+          </div>
+          <div class="signal-item">
+            <div class="signal-emoji">💵</div>
+            <div class="signal-info">
+              <div class="signal-name">USD / Money Markets</div>
+              <div class="signal-desc">Only clean safe haven. 4-5% yield with war risk premium</div>
+              <span class="sig-badge sig-watch">◆ Safe Haven</span>
+            </div>
+          </div>
+          <div class="signal-item">
+            <div class="signal-emoji">📱</div>
+            <div class="signal-info">
+              <div class="signal-name">Nasdaq / Tech Growth</div>
+              <div class="signal-desc">ATH with active war = distribution. May 8 risk event imminent</div>
+              <span class="sig-badge sig-bear">▼ Caution</span>
+            </div>
+          </div>
+          <div class="signal-item">
+            <div class="signal-emoji">🌾</div>
+            <div class="signal-info">
+              <div class="signal-name">Agriculture</div>
+              <div class="signal-desc">Fertilizer supply disruption → Q3/Q4 food price spike</div>
+              <span class="sig-badge sig-watch">◆ Watch</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EVENTS -->
+      <div style="margin-bottom:32px;">
+        <div class="section-eyebrow" style="margin-bottom:16px;">Critical Dates</div>
+        <div class="event-list">
+          <div class="event-row">
+            <div class="event-cal"><div class="event-cal-day">8</div><div class="event-cal-mo">May</div></div>
+            <div class="event-info">
+              <div class="event-name">Iran Ceasefire Reassessment</div>
+              <div class="event-detail">Tehran formally reviews terms. Deal or escalation.</div>
+              <div class="event-impact-badge imp-high">⚠ HIGH IMPACT</div>
+            </div>
+          </div>
+          <div class="event-row">
+            <div class="event-cal"><div class="event-cal-day">13</div><div class="event-cal-mo">May</div></div>
+            <div class="event-info">
+              <div class="event-name">US CPI Inflation Report</div>
+              <div class="event-detail">First full month of war-era energy costs. Expected 3.8%+</div>
+              <div class="event-impact-badge imp-high">⚠ HIGH IMPACT</div>
+            </div>
+          </div>
+          <div class="event-row">
+            <div class="event-cal"><div class="event-cal-day">18</div><div class="event-cal-mo">May</div></div>
+            <div class="event-info">
+              <div class="event-name">Federal Reserve Minutes</div>
+              <div class="event-detail">Rate cut vs hold. Energy inflation complicates the picture.</div>
+              <div class="event-impact-badge imp-med">● MEDIUM IMPACT</div>
+            </div>
+          </div>
+          <div class="event-row">
+            <div class="event-cal"><div class="event-cal-day">28</div><div class="event-cal-mo">May</div></div>
+            <div class="event-info">
+              <div class="event-name">War Powers Act Deadline</div>
+              <div class="event-detail">60-day military action limit without Congress approval.</div>
+              <div class="event-impact-badge imp-high">⚠ HIGH IMPACT</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NEWSLETTER -->
+      <div class="nl-panel">
+        <div class="nl-title">Free Morning Briefing</div>
+        <p class="nl-sub">5-minute geopolitical + market brief. Every morning at 6AM. Free forever.</p>
+        <input type="email" class="nl-input" placeholder="your@email.com" id="nlEmail">
+        <button class="btn btn-gold nl-btn" style="margin-top:10px;" onclick="subscribeNL()">Subscribe Free →</button>
+        <div class="nl-fine">12,400+ subscribers · No spam · Unsubscribe anytime</div>
+      </div>
+
+      <!-- SPONSOR -->
+      <div class="sponsor-panel">
+        <span class="sponsor-tag">Sponsored Placement</span>
+        <div class="sponsor-title">Advertise with Strategos</div>
+        <p class="sponsor-desc">Reach 12,000+ traders, investors, and policy professionals with your message.</p>
+        <button class="btn btn-outline sponsor-cta-btn" onclick="openModal('advertise')">Request Media Kit →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ════════════════════════════════════════════════ -->
+<footer id="about">
+  <div class="footer-main">
+    <div>
+      <div class="footer-brand-name">Strat<span>e</span>gos</div>
+      <div class="footer-brand-tagline">Geopolitical Intelligence</div>
+      <p class="footer-brand-desc">Institutional-grade intelligence and market signals for traders, investors, and informed decision-makers navigating an increasingly complex world.</p>
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--white-40);line-height:2;letter-spacing:0.06em;">
+        📍 London · Dubai · Singapore<br>
+        ✉ intelligence@strategos.io
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Intelligence</div>
+      <ul class="footer-links">
+        <li><a href="#">Daily Briefing</a></li>
+        <li><a href="#">Iran War Tracker</a></li>
+        <li><a href="#">Energy Crisis</a></li>
+        <li><a href="#">Market Signals</a></li>
+        <li><a href="#">QT Analysis</a></li>
+        <li><a href="#">Historical Crises</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Subscribe</div>
+      <ul class="footer-links">
+        <li><a href="#" onclick="openModal('free');return false;">Free Newsletter</a></li>
+        <li><a href="#" onclick="openModal('pro');return false;">Pro — $29/mo</a></li>
+        <li><a href="#" onclick="openModal('institutional');return false;">Institutional — $99/mo</a></li>
+        <li><a href="#" onclick="openModal('advertise');return false;">Advertise</a></li>
+        <li><a href="#">Affiliate Program</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Company</div>
+      <ul class="footer-links">
+        <li><a href="#">About</a></li>
+        <li><a href="#">Our Analysts</a></li>
+        <li><a href="#">Methodology</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Cookie Settings</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom-bar">
+    <div class="footer-copyright">© 2026 Strategos Intelligence Ltd. All rights reserved.</div>
+    <div class="footer-disclaimer">This content is for informational purposes only and does not constitute financial or investment advice. Past performance is not indicative of future results. Always conduct your own due diligence before making investment decisions. Strategos is not a registered investment advisor.</div>
+  </div>
+</footer>
+
+<!-- ═══ CHECKOUT MODAL ════════════════════════════════════════ -->
+<div class="overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-card">
+    <div class="modal-top-bar"></div>
+    <div class="modal-body">
+      <button class="modal-close-btn" onclick="closeModal()">×</button>
+
+      <!-- DEFAULT STATE -->
+      <div id="modalDefault">
+        <div class="modal-eyebrow" id="modalEyebrow">Join Strategos</div>
+        <h2 class="modal-title" id="modalTitle">Get Your Daily Intelligence Briefing</h2>
+        <p class="modal-sub" id="modalSub">Stay ahead of markets and geopolitical events. Cancel anytime.</p>
+
+        <!-- PLAN TOGGLE -->
+        <div class="plan-toggle" id="planToggle">
+          <button class="toggle-opt" data-plan="free" onclick="selectPlan('free',this)">Free</button>
+          <button class="toggle-opt active" data-plan="pro" onclick="selectPlan('pro',this)">Pro $29</button>
+          <button class="toggle-opt" data-plan="inst" onclick="selectPlan('inst',this)">Institutional $99</button>
+        </div>
+
+        <!-- PRICE SUMMARY -->
+        <div class="price-summary" id="priceSummary">
+          <div class="price-summary-row"><span>Plan</span><span id="summaryPlan">Pro Analyst</span></div>
+          <div class="price-summary-row"><span>Billing</span><span>Monthly</span></div>
+          <div class="price-summary-row"><span>Trial</span><span>7 days free</span></div>
+          <div class="price-summary-row"><span><strong>Total Today</strong></span><span id="summaryTotal"><strong>$0.00</strong></span></div>
+        </div>
+
+        <div class="modal-form">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-input" placeholder="John Smith" id="mName">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" class="form-input" placeholder="john@example.com" id="mEmail">
+          </div>
+
+          <!-- PAYMENT SECTION — hidden for free plan -->
+          <div id="paymentSection">
+            <div class="form-group">
+              <label class="form-label">Card Number</label>
+              <div class="stripe-element">
+                <span class="stripe-card-icon">💳</span>
+                <input type="text" placeholder="1234 5678 9012 3456" maxlength="19" id="cardNum" oninput="formatCard(this)">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Expiry</label>
+                <div class="stripe-element">
+                  <input type="text" placeholder="MM / YY" maxlength="7" id="cardExp" oninput="formatExpiry(this)">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">CVC</label>
+                <div class="stripe-element">
+                  <input type="text" placeholder="123" maxlength="4" id="cardCvc">
+                </div>
+              </div>
+            </div>
+            <div class="stripe-secure">
+              <span class="stripe-secure-icon">🔒</span>
+              <span class="stripe-secure-text">Secured by 256-bit SSL encryption</span>
+              <span class="stripe-logo">Powered by Stripe</span>
+            </div>
+          </div>
+
+          <button class="btn btn-gold submit-btn" onclick="handleSubmit()">
+            <span id="submitLabel">Start 7-Day Free Trial</span>
+            <span class="btn-arrow"> →</span>
+          </button>
+        </div>
+
+        <p class="modal-terms">By subscribing you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>. Cancel anytime from your account settings. No charges during the free trial.</p>
+      </div>
+
+      <!-- SUCCESS STATE -->
+      <div class="success-state" id="modalSuccess">
+        <div class="success-icon">✓</div>
+        <h2 class="success-title">Welcome to Strategos</h2>
+        <p class="success-sub">Your account is being set up. You'll receive your first intelligence briefing tomorrow morning at 6AM. Check your inbox for confirmation.</p>
+        <button class="btn btn-gold" style="width:100%;justify-content:center;padding:14px;" onclick="closeModal()">Go to Dashboard →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══ SCROLL REVEAL ═══════════════════════════════════════════
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ═══ MODAL SYSTEM ════════════════════════════════════════════
+const plans = {
+  free: { name: 'Free', price: '$0.00', label: 'Subscribe Free', showPayment: false, plan: 'Free Daily Briefing' },
+  pro: { name: 'Pro Analyst', price: '$0.00 (then $29/mo)', label: 'Start 7-Day Free Trial', showPayment: true, plan: 'Pro Analyst' },
+  inst: { name: 'Institutional', price: '$0.00 (then $99/mo)', label: 'Start 7-Day Free Trial', showPayment: true, plan: 'Institutional' },
+  institutional: { name: 'Institutional', price: '$0.00 (then $99/mo)', label: 'Start 7-Day Free Trial', showPayment: true, plan: 'Institutional' },
+  advertise: { name: 'Media Partnership', price: 'Custom', label: 'Submit Media Enquiry', showPayment: false, plan: 'Advertise' }
+};
+
+let currentPlan = 'pro';
+
+function openModal(planKey) {
+  const m = document.getElementById('modal');
+  m.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('modalDefault').style.display = 'block';
+  document.getElementById('modalSuccess').style.display = 'none';
+  selectPlanKey(planKey || 'pro');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function selectPlan(key, btn) {
+  document.querySelectorAll('.toggle-opt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectPlanKey(key);
+}
+
+function selectPlanKey(key) {
+  const p = plans[key] || plans['pro'];
+  currentPlan = key;
+  document.getElementById('summaryPlan').textContent = p.plan;
+  document.getElementById('summaryTotal').innerHTML = '<strong>' + p.price + '</strong>';
+  document.getElementById('submitLabel').textContent = p.label;
+  document.getElementById('paymentSection').style.display = p.showPayment ? 'block' : 'none';
+
+  const toggleBtns = document.querySelectorAll('.toggle-opt');
+  const keyMap = { free: 0, pro: 1, inst: 2 };
+  if (keyMap[key] !== undefined) {
+    toggleBtns.forEach(b => b.classList.remove('active'));
+    if (toggleBtns[keyMap[key]]) toggleBtns[keyMap[key]].classList.add('active');
+  }
+
+  if (key === 'advertise') {
+    document.getElementById('planToggle').style.display = 'none';
+    document.getElementById('priceSummary').style.display = 'none';
+    document.getElementById('modalTitle').textContent = 'Advertise with Strategos';
+    document.getElementById('modalSub').textContent = 'Reach 12,000+ traders and investors. Tell us about your campaign.';
+  } else {
+    document.getElementById('planToggle').style.display = 'flex';
+    document.getElementById('priceSummary').style.display = 'block';
+    document.getElementById('modalTitle').textContent = 'Get Your Intelligence Briefing';
+    document.getElementById('modalSub').textContent = 'Stay ahead of markets and geopolitical events. Cancel anytime.';
+  }
+}
+
+function handleSubmit() {
+  const name = document.getElementById('mName').value;
+  const email = document.getElementById('mEmail').value;
+  if (!email || !email.includes('@')) {
+    document.getElementById('mEmail').style.borderColor = '#e74c3c';
+    document.getElementById('mEmail').focus();
+    return;
+  }
+  const btn = document.querySelector('.submit-btn');
+  btn.innerHTML = '<span style="opacity:0.7">Processing...</span>';
+  btn.disabled = true;
+  setTimeout(() => {
+    document.getElementById('modalDefault').style.display = 'none';
+    document.getElementById('modalSuccess').style.display = 'block';
+    btn.disabled = false;
+    btn.innerHTML = '<span id="submitLabel">Start 7-Day Free Trial</span><span class="btn-arrow"> →</span>';
+  }, 1800);
+}
+
+// ═══ NEWSLETTER SIGNUP ═══════════════════════════════════════
+function subscribeNL() {
+  const el = document.getElementById('nlEmail');
+  if (!el.value || !el.value.includes('@')) {
+    el.style.borderColor = '#e74c3c';
+    el.focus();
+    return;
+  }
+  el.style.borderColor = 'var(--green-400)';
+  const btn = el.nextElementSibling;
+  btn.innerHTML = '✓ Subscribed!';
+  btn.style.background = 'var(--green-400)';
+  setTimeout(() => { el.value = ''; el.style.borderColor = ''; btn.innerHTML = 'Subscribe Free →'; btn.style.background = ''; }, 3000);
+}
+
+// ═══ CARD FORMATTING ════════════════════════════════════════
+function formatCard(el) {
+  let v = el.value.replace(/\D/g,'').substring(0,16);
+  el.value = v.replace(/(.{4})/g,'$1 ').trim();
+}
+function formatExpiry(el) {
+  let v = el.value.replace(/\D/g,'');
+  if (v.length >= 2) v = v.substring(0,2) + ' / ' + v.substring(2,4);
+  el.value = v;
+}
+
+// ═══ ESC TO CLOSE ════════════════════════════════════════════
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ═══ NAV ACTIVE ON SCROLL ════════════════════════════════════
+window.addEventListener('scroll', () => {
+  document.querySelectorAll('.nav-menu a').forEach(a => a.classList.remove('active'));
+});
+
+// ═══════════════════════════════════════════════════════════════
+// LIVE MARKET DATA ENGINE — Auto-updates every 30 seconds
+// Uses free public APIs — no API key required
+// Sources: Binance (crypto), Frankfurter (forex), Metal Price API (metals)
+// ═══════════════════════════════════════════════════════════════
+
+const ALERTS = [
+  { type: 'critical', text: '⚠ CRITICAL — UAE AIR DEFENSES ENGAGED — 15 MISSILES + 4 DRONES INTERCEPTED' },
+  { type: 'watch',    text: '⚠ WATCH — MAY 8: IRAN CEASEFIRE REASSESSMENT DATE' },
+  { type: 'data',     text: '⚠ INTEL — GOLD & SILVER SURGING — SAFE HAVEN DEMAND SPIKING' },
+];
+
+// Format number with commas and decimals
+function fmt(n, decimals = 2, prefix = '') {
+  if (n == null || isNaN(n)) return '—';
+  const s = Number(n).toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  return prefix + s;
+}
+
+function chgHtml(pct) {
+  if (pct == null || isNaN(pct)) return '<span style="color:var(--white-40)">—</span>';
+  const dir = pct >= 0 ? 'up' : 'dn';
+  const arrow = pct >= 0 ? '▲' : '▼';
+  return `<span class="${dir}">${arrow} ${Math.abs(pct).toFixed(2)}%</span>`;
+}
+
+function setMkt(id, price, pct, prefix = '') {
+  const priceEl = document.getElementById('mkt-' + id);
+  const chgEl   = document.getElementById('chg-' + id);
+  if (priceEl) priceEl.textContent = fmt(price, price < 10 ? 4 : price < 1000 ? 2 : 1, prefix);
+  if (chgEl)   chgEl.innerHTML = chgHtml(pct);
+  if (chgEl) {
+    chgEl.className = 'mkt-change';
+    if (pct != null) chgEl.classList.add(pct >= 0 ? 'up' : 'dn');
+  }
+}
+
+// Build ticker HTML from data + static alerts
+function buildTicker(assets) {
+  const items = [...assets, ...assets]; // duplicate for seamless loop
+  const alertItems = ALERTS.map(a => `<div class="ticker-item"><span class="alert-tag">⚠ ${a.type.toUpperCase()}</span> ${a.text.replace(/^⚠ \w+ — /, '')}</div>`);
+
+  let html = '';
+  // Build two copies (first half + alerts, second half + alerts) for infinite scroll
+  for (let copy = 0; copy < 2; copy++) {
+    assets.forEach(a => {
+      if (!a.price) return;
+      const dir = a.pct >= 0 ? 'up' : 'dn';
+      const arrow = a.pct >= 0 ? '▲' : '▼';
+      html += `<div class="ticker-item"><span class="asset">${a.label}</span> ${a.prefix || ''}${fmt(a.price, a.price < 10 ? 4 : a.price < 1000 ? 2 : 0)} <span class="${dir}">${arrow} ${Math.abs(a.pct || 0).toFixed(2)}%</span></div>`;
+    });
+    ALERTS.forEach(a => {
+      html += `<div class="ticker-item"><span class="alert-tag">⚠ ${a.type.toUpperCase().substring(0,7)}</span> ${a.text.replace(/^⚠ \w+ — /, '')}</div>`;
+    });
+  }
+  return html;
+}
+
+// Timestamp
+function updateTimestamp() {
+  const el = document.getElementById('lastUpdated');
+  if (el) {
+    const now = new Date();
+    el.textContent = `Live data · Last updated ${now.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit', second:'2-digit'})} · Auto-refreshes every 30s`;
+  }
+}
+
+// ── FETCH ALL DATA (via secure backend) ─────────────────────
+async function fetchLiveData() {
+  const response = await fetch(`${API_BASE}/api/markets`);
+  if (!response.ok) throw new Error(`Markets API error: ${response.status}`);
+  const json = await response.json();
+
+  // Map backend keys to frontend expected keys
+  const d = json.data || {};
+  return {
+    US100:  d.NDX,
+    US30:   d.DJI,
+    SPX:    d.GSPC,
+    VIX:    d.VIX,
+    GOLD:   d.GOLD,
+    SILVER: d.SILVER,
+    BTC:    d.BTC,
+    ETH:    d.ETH,
+    EUR:    d.EURUSD,
+    GBP:    d.GBPUSD,
+    BRENT:  d.BRENT
+  };
+}
+
+// ── UPDATE DOM ──────────────────────────────────────────────
+async function updateMarkets() {
+  try {
+    const data = await fetchLiveData();
+
+    // Market bar
+    if (data.US100)  setMkt('US100',  data.US100.price,  data.US100.pct);
+    if (data.US30)   setMkt('US30',   data.US30.price,   data.US30.pct);
+    if (data.SPX)    setMkt('SPX',    data.SPX.price,    data.SPX.pct);
+    if (data.GOLD)   setMkt('GOLD',   data.GOLD.price,   data.GOLD.pct,   '$');
+    if (data.SILVER) setMkt('SILVER', data.SILVER.price, data.SILVER.pct, '$');
+    if (data.BTC)    setMkt('BTC',    data.BTC.price,    data.BTC.pct,    '$');
+    if (data.EUR)    setMkt('EUR',    data.EUR.price,    data.EUR.pct);
+    if (data.GBP)    setMkt('GBP',    data.GBP.price,    data.GBP.pct);
+
+    // Hero stats — update live
+    const proofNums = document.querySelectorAll('.proof-num');
+    if (proofNums[0] && data.US100) proofNums[0].textContent = Number(data.US100.price).toLocaleString('en-US', {maximumFractionDigits:0});
+    if (proofNums[1] && data.GOLD)  proofNums[1].textContent = '$' + Number(data.GOLD.price).toLocaleString('en-US', {maximumFractionDigits:0});
+
+    // VIX warning — if fear index spikes, show red banner
+    if (data.VIX && data.VIX.price > 25) {
+      let vixBanner = document.getElementById('vixBanner');
+      if (!vixBanner) {
+        vixBanner = document.createElement('div');
+        vixBanner.id = 'vixBanner';
+        vixBanner.style.cssText = 'background:rgba(192,57,43,0.12);border-bottom:1px solid rgba(231,76,60,0.3);text-align:center;padding:8px;font-family:var(--font-mono);font-size:11px;color:var(--red-400);letter-spacing:0.1em;';
+        document.body.insertBefore(vixBanner, document.body.firstChild);
+      }
+      vixBanner.innerHTML = `⚠ VIX FEAR INDEX: ${data.VIX.price.toFixed(1)} — ELEVATED MARKET VOLATILITY · Protect your positions`;
+    }
+
+    // Ticker — all assets
+    const tickerAssets = [
+      { label: 'US100',   prefix: '',  ...(data.US100  || {}) },
+      { label: 'US30',    prefix: '',  ...(data.US30   || {}) },
+      { label: 'S&P500',  prefix: '',  ...(data.SPX    || {}) },
+      { label: 'GOLD',    prefix: '$', ...(data.GOLD   || {}) },
+      { label: 'SILVER',  prefix: '$', ...(data.SILVER || {}) },
+      { label: 'BTC',     prefix: '$', ...(data.BTC    || {}) },
+      { label: 'ETH',     prefix: '$', ...(data.ETH    || {}) },
+      { label: 'BRENT',   prefix: '$', ...(data.BRENT  || {}) },
+      { label: 'EUR/USD', prefix: '',  ...(data.EUR    || {}) },
+      { label: 'GBP/USD', prefix: '',  ...(data.GBP    || {}) },
+    ].filter(a => a.price);
+
+    if (tickerAssets.length > 0) {
+      document.getElementById('tickerInner').innerHTML = buildTicker(tickerAssets);
+    }
+
+    updateTimestamp();
+  } catch(err) {
+    console.error('Market update failed:', err);
+  }
+}
+
+// ═══ BOOT ────────────────────────────────────────────────────
+// Run immediately on load, then every 30 seconds
+updateMarkets();
+setInterval(updateMarkets, 30000);
+
+// ═══════════════════════════════════════════════════════════════
+// AI CONTENT ENGINE — Powered by Claude API
+// Auto-generates: live alerts, featured article, sidebar articles,
+// intelligence archive cards — all updated with web search
+// ═══════════════════════════════════════════════════════════════
+
+const TODAY = new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+// ── BACKEND CONFIG ────────────────────────────────────────────
+// When running locally: http://localhost:3001
+// When deployed: your live domain e.g. https://api.strategos.io
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:3001'
+  : window.location.origin; // Same-origin when frontend+backend on same server
+
+// ── SECURE CLAUDE CALL (via your backend — no API key in browser) ──
+async function callClaude(prompt, maxTokens = 1200) {
+  const response = await fetch(`${API_BASE}/api/claude`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prompt, maxTokens, useWebSearch: true })
+  });
+  if (!response.ok) throw new Error(`Backend error: ${response.status}`);
+  const data = await response.json();
+  return data.text || '';
+}
+
+function safeJSON(text) {
+  try {
+    const clean = text.replace(/```json|```/g, '').trim();
+    const start = clean.indexOf('[');
+    const end = clean.lastIndexOf(']');
+    if (start !== -1 && end !== -1) return JSON.parse(clean.slice(start, end + 1));
+    const os = clean.indexOf('{');
+    const oe = clean.lastIndexOf('}');
+    if (os !== -1 && oe !== -1) return JSON.parse(clean.slice(os, oe + 1));
+  } catch(e) {}
+  return null;
+}
+
+// ── 1. LIVE CONFLICT ALERTS ──────────────────────────────────
+async function loadAlerts() {
+  const panel = document.getElementById('alertsPanel');
+  try {
+    const raw = await callClaude(
+      `Today is ${TODAY}. Search for the 5 most critical geopolitical and financial news events happening RIGHT NOW — especially related to: Iran, Middle East conflict, Strait of Hormuz, UAE attacks, global oil markets, US markets, inflation, war tensions, and major central bank news.
+
+Return ONLY a JSON array with exactly 5 objects, no other text:
+[
+  {
+    "severity": "critical|elevated|watch",
+    "region": "short region/topic label",
+    "time": "today's date or hours ago",
+    "headline": "bold short headline",
+    "body": "2 sentence summary of what happened and why it matters"
+  }
+]`, 800);
+
+    const alerts = safeJSON(raw);
+    if (!alerts || !Array.isArray(alerts)) throw new Error('Bad JSON');
+
+    panel.innerHTML = alerts.map(a => `
+      <div class="alert-row ${a.severity}">
+        <div class="alert-top">
+          <span class="alert-severity ${a.severity}">● ${a.severity.charAt(0).toUpperCase()+a.severity.slice(1)} — ${a.region}</span>
+          <span class="alert-time">${a.time}</span>
+        </div>
+        <div class="alert-body"><strong>${a.headline}:</strong> ${a.body}</div>
+      </div>`).join('');
+  } catch(e) {
+    panel.innerHTML = `<div class="ai-loading-row" style="color:var(--red-400);">⚠ Live alerts temporarily unavailable. Refresh to retry.</div>`;
+    console.error('Alerts error:', e);
+  }
+}
+
+// ── 2. FEATURED ARTICLE + SIDEBAR ────────────────────────────
+async function loadFeatured() {
+  const featuredEl = document.getElementById('featuredArticle');
+  const sidebarEl  = document.getElementById('sidebarArticles');
+
+  try {
+    const raw = await callClaude(
+      `Today is ${TODAY}. Search for today's most important geopolitical and market story — focusing on Iran, Middle East tensions, oil markets, global inflation, war risk, Nasdaq/US markets.
+
+Return ONLY this JSON object, no other text:
+{
+  "category": "one of: Iran War | Markets | Geopolitics | Energy | QT Analysis | Inflation",
+  "catClass": "one of: cat-conflict | cat-markets | cat-analysis | cat-energy | cat-qt",
+  "title": "compelling 12-15 word headline",
+  "excerpt": "3 sentences summarizing the story, what happened, and what it means for traders",
+  "date": "${TODAY}",
+  "readTime": "10",
+  "sidebar": [
+    {"category":"Markets","catClass":"cat-markets","title":"headline","date":"${TODAY}","readTime":"7"},
+    {"category":"Geopolitics","catClass":"cat-analysis","title":"headline","date":"${TODAY}","readTime":"9"},
+    {"category":"Energy","catClass":"cat-energy","title":"headline","date":"${TODAY}","readTime":"6"},
+    {"category":"QT Analysis","catClass":"cat-qt","title":"headline","date":"${TODAY}","readTime":"11"},
+    {"category":"Investigation","catClass":"cat-analysis","title":"headline","date":"${TODAY}","readTime":"8"}
+  ]
+}`, 1000);
+
+    const data = safeJSON(raw);
+    if (!data) throw new Error('Bad JSON');
+
+    featuredEl.innerHTML = `
+      <div class="article-cat ${data.catClass}">
+        <div class="live-dot"></div> ${data.category} <span class="ai-badge">✦ AI Generated</span>
+      </div>
+      <h2 class="featured-title" onclick="openModal('pro')">${data.title}</h2>
+      <p class="featured-excerpt">${data.excerpt}</p>
+      <div class="article-byline">
+        <span class="byline-author">STRATEGOS Intelligence Desk</span>
+        <span class="byline-dot">·</span>
+        <span>${data.date}</span>
+        <span class="byline-dot">·</span>
+        <span>${data.readTime} min read</span>
+      </div>
+      <a href="#pricing" class="read-btn" onclick="openModal('pro');return false;">Continue Reading</a>`;
+
+    if (data.sidebar && Array.isArray(data.sidebar)) {
+      sidebarEl.innerHTML = data.sidebar.map(s => `
+        <div class="sidebar-art" onclick="openModal('pro')">
+          <div class="sidebar-art-cat"><span class="article-cat ${s.catClass}" style="font-size:9px;padding:3px 8px;">${s.category}</span></div>
+          <div class="sidebar-art-title">${s.title}</div>
+          <div class="sidebar-art-meta">${s.date} · ${s.readTime} min read</div>
+        </div>`).join('');
+    }
+  } catch(e) {
+    featuredEl.innerHTML = `<div style="padding:32px 0;color:var(--white-40);font-family:var(--font-mono);font-size:12px;">⚠ Content loading failed. <button onclick="loadFeatured()" style="color:var(--gold-400);background:none;border:none;cursor:pointer;font-family:inherit;font-size:inherit;">Retry →</button></div>`;
+    console.error('Featured error:', e);
+  }
+}
+
+// ── 3. INTELLIGENCE ARCHIVE CARDS ────────────────────────────
+async function loadArchive() {
+  const grid = document.getElementById('artGrid');
+  try {
+    const raw = await callClaude(
+      `Today is ${TODAY}. Based on current world events — Iran war, oil crisis, global inflation, market tensions, geopolitical risks — generate 6 deep analysis article cards for a geopolitical intelligence website.
+
+Return ONLY a JSON array of exactly 6 objects, no other text:
+[
+  {
+    "category": "category label",
+    "catClass": "one of: cat-conflict|cat-markets|cat-analysis|cat-energy|cat-qt",
+    "title": "14-word compelling headline",
+    "excerpt": "2 sentences explaining the analysis angle",
+    "date": "recent date like May 5, 2026",
+    "readTime": "number"
+  }
+]`, 1000);
+
+    const cards = safeJSON(raw);
+    if (!cards || !Array.isArray(cards)) throw new Error('Bad JSON');
+
+    grid.innerHTML = cards.map(c => `
+      <div class="art-card" onclick="openModal('pro')">
+        <div class="art-card-cat"><span class="article-cat ${c.catClass}" style="font-size:9px;padding:3px 8px;">${c.category}</span></div>
+        <div class="art-card-title">${c.title}</div>
+        <p class="art-card-excerpt">${c.excerpt}</p>
+        <div class="art-card-footer">
+          <span class="art-card-date">${c.date}</span>
+          <span class="art-card-read">Premium →</span>
+        </div>
+      </div>`).join('');
+  } catch(e) {
+    grid.innerHTML = `<div class="art-card" style="grid-column:1/-1;text-align:center;padding:32px;color:var(--white-40);font-family:var(--font-mono);font-size:12px;">⚠ Archive loading failed. <button onclick="loadArchive()" style="color:var(--gold-400);background:none;border:none;cursor:pointer;font-family:inherit;font-size:inherit;">Retry →</button></div>`;
+    console.error('Archive error:', e);
+  }
+}
+
+// ── MASTER REFRESH ───────────────────────────────────────────
+async function refreshAllContent() {
+  const btn = document.getElementById('refreshBtn');
+  const status = document.getElementById('contentStatusText');
+  btn.disabled = true;
+  btn.textContent = '↻ Refreshing...';
+
+  // Reset to loading states
+  document.getElementById('alertsPanel').innerHTML = '<div class="ai-loading-row"><span class="ai-spinner"></span> Fetching live intelligence alerts...</div>';
+  document.getElementById('featuredArticle').innerHTML = '<div style="display:flex;align-items:center;gap:12px;padding:40px 0;color:var(--white-40);"><span class="ai-spinner"></span><span style="font-family:var(--font-mono);font-size:12px;letter-spacing:0.1em;">AI generating today\'s lead intelligence report...</span></div>';
+  document.getElementById('sidebarArticles').innerHTML = '<div class="ai-loading-row"><span class="ai-spinner"></span> Loading...</div>';
+  document.getElementById('artGrid').innerHTML = '<div class="art-card" style="grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:12px;padding:40px;"><span class="ai-spinner"></span><span style="font-family:var(--font-mono);font-size:12px;color:var(--white-40);">AI generating archive...</span></div>';
+
+  status.innerHTML = '<span class="ai-spinner" style="width:10px;height:10px;border-width:1.5px;vertical-align:middle;margin-right:6px;"></span> AI regenerating all content...';
+
+  await Promise.all([loadAlerts(), loadFeatured(), loadArchive()]);
+
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'});
+  status.innerHTML = `✦ AI-generated · Last updated ${timeStr} · Powered by Claude + Web Search`;
+  btn.disabled = false;
+  btn.textContent = '↻ Refresh';
+}
+
+// ── BOOT ALL CONTENT ─────────────────────────────────────────
+refreshAllContent();
+</script>
+</body>
+</html>
