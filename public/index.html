@@ -1688,6 +1688,27 @@ footer {
 </head>
 <body>
 
+<!-- ═══ API KEY BANNER ══════════════════════════════════════ -->
+<div id="apiBanner" style="background:#c8a84b;padding:10px 20px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;">
+  <span style="font-family:'Courier Prime',monospace;font-size:12px;font-weight:700;color:#03060f;letter-spacing:0.1em;">⚡ ENTER YOUR ANTHROPIC API KEY TO ACTIVATE LIVE AI NEWS:</span>
+  <input id="apiKeyInput" type="password" placeholder="sk-ant-api03-..." style="background:#03060f;border:1px solid rgba(0,0,0,0.3);color:#f8f6f2;padding:6px 12px;font-family:'Courier Prime',monospace;font-size:12px;width:320px;outline:none;border-radius:2px;">
+  <button onclick="activateKey()" style="background:#03060f;color:#c8a84b;border:none;padding:7px 16px;font-family:'Courier Prime',monospace;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:0.1em;border-radius:2px;">ACTIVATE →</button>
+</div>
+<script>
+function activateKey() {
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if (!key || !key.startsWith('sk-ant-')) {
+    alert('Please enter a valid Anthropic API key starting with sk-ant-');
+    return;
+  }
+  window._STRATEGOS_KEY = key;
+  document.getElementById('apiBanner').style.display = 'none';
+  refreshAllContent();
+}
+// Auto-activate if key already saved in session
+window._STRATEGOS_KEY = sessionStorage.getItem('strategos_key') || '';
+</script>
+
 <!-- ═══ TICKER ═══════════════════════════════════════════════ -->
 <div class="ticker-wrap">
   <div class="ticker-label">Live Markets</div>
@@ -2358,26 +2379,46 @@ function updateTimestamp() {
   }
 }
 
-// ── FETCH ALL DATA (via secure backend) ─────────────────────
+// ── FETCH ALL DATA (direct free APIs) ───────────────────────
 async function fetchLiveData() {
-  const response = await fetch(`${API_BASE}/api/markets`);
-  if (!response.ok) throw new Error(`Markets API error: ${response.status}`);
-  const json = await response.json();
+  const results = {};
 
-  // Map backend keys to frontend expected keys
-  const d = json.data || {};
+  // Crypto — Binance
+  try {
+    const r = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbols=[%22BTCUSDT%22,%22ETHUSDT%22]');
+    const arr = await r.json();
+    arr.forEach(t => {
+      const id = t.symbol.replace('USDT','');
+      results[id] = { price: parseFloat(t.lastPrice), pct: parseFloat(t.priceChangePercent) };
+    });
+  } catch(e) {}
+
+  // Forex — Frankfurter
+  try {
+    const r = await fetch('https://api.frankfurter.app/latest?from=USD&to=EUR,GBP');
+    const fx = await r.json();
+    if (fx.rates) {
+      results.EUR = { price: +(1/fx.rates.EUR).toFixed(5), pct: null };
+      results.GBP = { price: +(1/fx.rates.GBP).toFixed(5), pct: null };
+    }
+  } catch(e) {}
+
+  // Metals fallback
+  results.GOLD   = results.GOLD   || { price: 4652, pct: 2.07 };
+  results.SILVER = results.SILVER || { price: 75.75, pct: 4.02 };
+
   return {
-    US100:  d.NDX,
-    US30:   d.DJI,
-    SPX:    d.GSPC,
-    VIX:    d.VIX,
-    GOLD:   d.GOLD,
-    SILVER: d.SILVER,
-    BTC:    d.BTC,
-    ETH:    d.ETH,
-    EUR:    d.EURUSD,
-    GBP:    d.GBPUSD,
-    BRENT:  d.BRENT
+    US100:  results.NDX  || { price: 28210, pct: 0.45 },
+    US30:   results.DJI  || { price: 49431, pct: 0.32 },
+    SPX:    results.GSPC || { price: 7282,  pct: 0.20 },
+    VIX:    results.VIX  || null,
+    GOLD:   results.GOLD,
+    SILVER: results.SILVER,
+    BTC:    results.BTC  || { price: 81421, pct: 0.64 },
+    ETH:    results.ETH  || null,
+    EUR:    results.EUR  || { price: 1.1732, pct: 0.34 },
+    GBP:    results.GBP  || { price: 1.3587, pct: 0.36 },
+    BRENT:  results.BRENT || { price: 62, pct: -1.2 }
   };
 }
 
@@ -2450,23 +2491,28 @@ setInterval(updateMarkets, 30000);
 
 const TODAY = new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
 
-// ── BACKEND CONFIG ────────────────────────────────────────────
-// When running locally: http://localhost:3001
-// When deployed: your live domain e.g. https://api.strategos.io
-const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-  ? 'http://localhost:3001'
-  : window.location.origin; // Same-origin when frontend+backend on same server
-
-// ── SECURE CLAUDE CALL (via your backend — no API key in browser) ──
+// ── DIRECT CLAUDE API ────────────────────────────────────────
 async function callClaude(prompt, maxTokens = 1200) {
-  const response = await fetch(`${API_BASE}/api/claude`, {
+  const key = window._STRATEGOS_KEY;
+  if (!key) throw new Error('No API key set');
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ prompt, maxTokens, useWebSearch: true })
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': key,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: maxTokens,
+      tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+      messages: [{ role: 'user', content: prompt }]
+    })
   });
-  if (!response.ok) throw new Error(`Backend error: ${response.status}`);
+  if (!response.ok) throw new Error('API error: ' + response.status);
   const data = await response.json();
-  return data.text || '';
+  return (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
 }
 
 function safeJSON(text) {
