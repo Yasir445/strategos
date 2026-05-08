@@ -1688,27 +1688,6 @@ footer {
 </head>
 <body>
 
-<!-- ═══ API KEY BANNER ══════════════════════════════════════ -->
-<div id="apiBanner" style="background:#c8a84b;padding:10px 20px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;">
-  <span style="font-family:'Courier Prime',monospace;font-size:12px;font-weight:700;color:#03060f;letter-spacing:0.1em;">⚡ ENTER YOUR ANTHROPIC API KEY TO ACTIVATE LIVE AI NEWS:</span>
-  <input id="apiKeyInput" type="password" placeholder="sk-ant-api03-..." style="background:#03060f;border:1px solid rgba(0,0,0,0.3);color:#f8f6f2;padding:6px 12px;font-family:'Courier Prime',monospace;font-size:12px;width:320px;outline:none;border-radius:2px;">
-  <button onclick="activateKey()" style="background:#03060f;color:#c8a84b;border:none;padding:7px 16px;font-family:'Courier Prime',monospace;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:0.1em;border-radius:2px;">ACTIVATE →</button>
-</div>
-<script>
-function activateKey() {
-  const key = document.getElementById('apiKeyInput').value.trim();
-  if (!key || !key.startsWith('sk-ant-')) {
-    alert('Please enter a valid Anthropic API key starting with sk-ant-');
-    return;
-  }
-  window._STRATEGOS_KEY = key;
-  document.getElementById('apiBanner').style.display = 'none';
-  refreshAllContent();
-}
-// Auto-activate if key already saved in session
-window._STRATEGOS_KEY = sessionStorage.getItem('strategos_key') || '';
-</script>
-
 <!-- ═══ TICKER ═══════════════════════════════════════════════ -->
 <div class="ticker-wrap">
   <div class="ticker-label">Live Markets</div>
@@ -2491,42 +2470,17 @@ setInterval(updateMarkets, 30000);
 
 const TODAY = new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
 
-// ── CLAUDE VIA CORSPROXY ─────────────────────────────────────
+// ── CLAUDE VIA VERCEL SERVERLESS FUNCTION ────────────────────
 async function callClaude(prompt, maxTokens = 1200) {
-  const key = window._STRATEGOS_KEY;
-  if (!key) throw new Error('No API key set');
-
-  const body = JSON.stringify({
-    model: 'claude-sonnet-4-20250514',
-    max_tokens: maxTokens,
-    tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-    messages: [{ role: 'user', content: prompt }]
+  const response = await fetch('/api/claude', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prompt, maxTokens })
   });
-
-  // Try direct first (works if CORS allowed), fallback to proxy
-  const endpoints = [
-    { url: 'https://api.anthropic.com/v1/messages', headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': key,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-    }},
-    { url: 'https://corsproxy.io/?' + encodeURIComponent('https://api.anthropic.com/v1/messages'), headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': key,
-        'anthropic-version': '2023-06-01'
-    }}
-  ];
-
-  for (const ep of endpoints) {
-    try {
-      const response = await fetch(ep.url, { method: 'POST', headers: ep.headers, body });
-      if (!response.ok) { const t = await response.text(); console.warn('Endpoint failed:', ep.url, t); continue; }
-      const data = await response.json();
-      return (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
-    } catch(e) { console.warn('Endpoint error:', ep.url, e); }
-  }
-  throw new Error('All Claude endpoints failed');
+  if (!response.ok) throw new Error('API error: ' + response.status);
+  const data = await response.json();
+  if (data.error) throw new Error(data.error);
+  return data.text || '';
 }
 
 function safeJSON(text) {
@@ -2702,4 +2656,3 @@ refreshAllContent();
 </script>
 </body>
 </html>
-
