@@ -2491,28 +2491,42 @@ setInterval(updateMarkets, 30000);
 
 const TODAY = new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
 
-// ── DIRECT CLAUDE API ────────────────────────────────────────
+// ── CLAUDE VIA CORSPROXY ─────────────────────────────────────
 async function callClaude(prompt, maxTokens = 1200) {
   const key = window._STRATEGOS_KEY;
   if (!key) throw new Error('No API key set');
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': key,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: maxTokens,
-      tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-      messages: [{ role: 'user', content: prompt }]
-    })
+
+  const body = JSON.stringify({
+    model: 'claude-sonnet-4-20250514',
+    max_tokens: maxTokens,
+    tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+    messages: [{ role: 'user', content: prompt }]
   });
-  if (!response.ok) throw new Error('API error: ' + response.status);
-  const data = await response.json();
-  return (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+
+  // Try direct first (works if CORS allowed), fallback to proxy
+  const endpoints = [
+    { url: 'https://api.anthropic.com/v1/messages', headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+    }},
+    { url: 'https://corsproxy.io/?' + encodeURIComponent('https://api.anthropic.com/v1/messages'), headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01'
+    }}
+  ];
+
+  for (const ep of endpoints) {
+    try {
+      const response = await fetch(ep.url, { method: 'POST', headers: ep.headers, body });
+      if (!response.ok) { const t = await response.text(); console.warn('Endpoint failed:', ep.url, t); continue; }
+      const data = await response.json();
+      return (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+    } catch(e) { console.warn('Endpoint error:', ep.url, e); }
+  }
+  throw new Error('All Claude endpoints failed');
 }
 
 function safeJSON(text) {
@@ -2688,3 +2702,4 @@ refreshAllContent();
 </script>
 </body>
 </html>
+
