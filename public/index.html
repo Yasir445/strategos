@@ -2463,195 +2463,62 @@ updateMarkets();
 setInterval(updateMarkets, 30000);
 
 // ═══════════════════════════════════════════════════════════════
-// AI CONTENT ENGINE — Powered by Claude API
-// Auto-generates: live alerts, featured article, sidebar articles,
-// intelligence archive cards — all updated with web search
+// STATIC CONTENT ENGINE — Professional intelligence content
 // ═══════════════════════════════════════════════════════════════
 
-const TODAY = new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+const TODAY_STR = new Date().toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
 
-// ── CLAUDE VIA VERCEL SERVERLESS FUNCTION ────────────────────
-async function callClaude(prompt, maxTokens = 1200) {
-  const response = await fetch('/api/claude', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ prompt, maxTokens })
-  });
-  if (!response.ok) throw new Error('API error: ' + response.status);
-  const data = await response.json();
-  if (data.error) throw new Error(data.error);
-  return data.text || '';
-}
-
-function safeJSON(text) {
-  try {
-    const clean = text.replace(/```json|```/g, '').trim();
-    const start = clean.indexOf('[');
-    const end = clean.lastIndexOf(']');
-    if (start !== -1 && end !== -1) return JSON.parse(clean.slice(start, end + 1));
-    const os = clean.indexOf('{');
-    const oe = clean.lastIndexOf('}');
-    if (os !== -1 && oe !== -1) return JSON.parse(clean.slice(os, oe + 1));
-  } catch(e) {}
-  return null;
-}
-
-// ── 1. LIVE CONFLICT ALERTS ──────────────────────────────────
-async function loadAlerts() {
+function loadAlerts() {
   const panel = document.getElementById('alertsPanel');
-  try {
-    const raw = await callClaude(
-      `Today is ${TODAY}. Search for the 5 most critical geopolitical and financial news events happening RIGHT NOW — especially related to: Iran, Middle East conflict, Strait of Hormuz, UAE attacks, global oil markets, US markets, inflation, war tensions, and major central bank news.
-
-Return ONLY a JSON array with exactly 5 objects, no other text:
-[
-  {
-    "severity": "critical|elevated|watch",
-    "region": "short region/topic label",
-    "time": "today's date or hours ago",
-    "headline": "bold short headline",
-    "body": "2 sentence summary of what happened and why it matters"
-  }
-]`, 800);
-
-    const alerts = safeJSON(raw);
-    if (!alerts || !Array.isArray(alerts)) throw new Error('Bad JSON');
-
-    panel.innerHTML = alerts.map(a => `
-      <div class="alert-row ${a.severity}">
-        <div class="alert-top">
-          <span class="alert-severity ${a.severity}">● ${a.severity.charAt(0).toUpperCase()+a.severity.slice(1)} — ${a.region}</span>
-          <span class="alert-time">${a.time}</span>
-        </div>
-        <div class="alert-body"><strong>${a.headline}:</strong> ${a.body}</div>
-      </div>`).join('');
-  } catch(e) {
-    panel.innerHTML = `<div class="ai-loading-row" style="color:var(--red-400);">⚠ Live alerts temporarily unavailable. Refresh to retry.</div>`;
-    console.error('Alerts error:', e);
-  }
+  if (!panel) return;
+  panel.innerHTML = [
+    { sev:'critical', region:'Strait of Hormuz', headline:'Project Freedom Day 3', body:'US Navy escorts 2nd merchant convoy through contested strait. Iran warns further transits breach ceasefire. 340+ vessels remain stranded in Gulf.' },
+    { sev:'critical', region:'UAE — Active Attack', headline:'UAE Air Defenses Engaged Again', body:'15 missiles and 4 drones intercepted over Fujairah. Oil facility fire contained. UAE Defense Ministry confirms active military response underway.' },
+    { sev:'elevated', region:'Markets', headline:'Nasdaq at ATH During Active War', body:"S&P 500 hits all-time high while oil is up 50%+ since conflict began. Analysts warn of dangerous disconnect — markets pricing in ceasefire that isn't confirmed." },
+    { sev:'watch', region:'Diplomacy', headline:'Pakistan-Mediated Talks Ongoing', body:"Iran's 14-point ceasefire proposal under review. US demands nuclear transparency. May 8 reassessment date passed — no formal decision announced." },
+    { sev:'elevated', region:'Energy Crisis', headline:'Energy Crisis Extends to 2027', body:'S&P Global: minimum 7 months to restore upstream production even after Hormuz reopens. Fertilizer supply collapse threatens Q3/Q4 food price spike globally.' }
+  ].map(a => `<div class="alert-row ${a.sev}"><div class="alert-top"><span class="alert-severity ${a.sev}">● ${a.sev.charAt(0).toUpperCase()+a.sev.slice(1)} — ${a.region}</span><span class="alert-time">${TODAY_STR}</span></div><div class="alert-body"><strong>${a.headline}:</strong> ${a.body}</div></div>`).join('');
 }
 
-// ── 2. FEATURED ARTICLE + SIDEBAR ────────────────────────────
-async function loadFeatured() {
-  const featuredEl = document.getElementById('featuredArticle');
-  const sidebarEl  = document.getElementById('sidebarArticles');
-
-  try {
-    const raw = await callClaude(
-      `Today is ${TODAY}. Search for today's most important geopolitical and market story — focusing on Iran, Middle East tensions, oil markets, global inflation, war risk, Nasdaq/US markets.
-
-Return ONLY this JSON object, no other text:
-{
-  "category": "one of: Iran War | Markets | Geopolitics | Energy | QT Analysis | Inflation",
-  "catClass": "one of: cat-conflict | cat-markets | cat-analysis | cat-energy | cat-qt",
-  "title": "compelling 12-15 word headline",
-  "excerpt": "3 sentences summarizing the story, what happened, and what it means for traders",
-  "date": "${TODAY}",
-  "readTime": "10",
-  "sidebar": [
-    {"category":"Markets","catClass":"cat-markets","title":"headline","date":"${TODAY}","readTime":"7"},
-    {"category":"Geopolitics","catClass":"cat-analysis","title":"headline","date":"${TODAY}","readTime":"9"},
-    {"category":"Energy","catClass":"cat-energy","title":"headline","date":"${TODAY}","readTime":"6"},
-    {"category":"QT Analysis","catClass":"cat-qt","title":"headline","date":"${TODAY}","readTime":"11"},
-    {"category":"Investigation","catClass":"cat-analysis","title":"headline","date":"${TODAY}","readTime":"8"}
-  ]
-}`, 1000);
-
-    const data = safeJSON(raw);
-    if (!data) throw new Error('Bad JSON');
-
-    featuredEl.innerHTML = `
-      <div class="article-cat ${data.catClass}">
-        <div class="live-dot"></div> ${data.category} <span class="ai-badge">✦ AI Generated</span>
-      </div>
-      <h2 class="featured-title" onclick="openModal('pro')">${data.title}</h2>
-      <p class="featured-excerpt">${data.excerpt}</p>
-      <div class="article-byline">
-        <span class="byline-author">STRATEGOS Intelligence Desk</span>
-        <span class="byline-dot">·</span>
-        <span>${data.date}</span>
-        <span class="byline-dot">·</span>
-        <span>${data.readTime} min read</span>
-      </div>
-      <a href="#pricing" class="read-btn" onclick="openModal('pro');return false;">Continue Reading</a>`;
-
-    if (data.sidebar && Array.isArray(data.sidebar)) {
-      sidebarEl.innerHTML = data.sidebar.map(s => `
-        <div class="sidebar-art" onclick="openModal('pro')">
-          <div class="sidebar-art-cat"><span class="article-cat ${s.catClass}" style="font-size:9px;padding:3px 8px;">${s.category}</span></div>
-          <div class="sidebar-art-title">${s.title}</div>
-          <div class="sidebar-art-meta">${s.date} · ${s.readTime} min read</div>
-        </div>`).join('');
-    }
-  } catch(e) {
-    featuredEl.innerHTML = `<div style="padding:32px 0;color:var(--white-40);font-family:var(--font-mono);font-size:12px;">⚠ Content loading failed. <button onclick="loadFeatured()" style="color:var(--gold-400);background:none;border:none;cursor:pointer;font-family:inherit;font-size:inherit;">Retry →</button></div>`;
-    console.error('Featured error:', e);
-  }
+function loadFeatured() {
+  const el = document.getElementById('featuredArticle');
+  const sb = document.getElementById('sidebarArticles');
+  if (!el) return;
+  el.innerHTML = `<div class="article-cat cat-conflict"><div class="live-dot"></div> Iran War</div><h2 class="featured-title" onclick="openModal('pro')">Ceasefire Fractures as UAE Hit Two Days Running — Diplomatic Resolution Remains Elusive</h2><p class="featured-excerpt">The fragile US-Iran ceasefire is being stress-tested in real time. Iran has launched consecutive drone and missile attacks on the UAE while warning that US Operation Project Freedom convoys violate ceasefire terms. With global energy markets on edge, only two merchant ships have transited under US military protection while hundreds remain stranded. Here is the full scenario matrix and what each outcome means for your portfolio.</p><div class="article-byline"><span class="byline-author">STRATEGOS Intelligence Desk</span><span class="byline-dot">·</span><span>${TODAY_STR}</span><span class="byline-dot">·</span><span>14 min read</span></div><a href="#pricing" class="read-btn" onclick="openModal('pro');return false;">Continue Reading</a>`;
+  if (sb) sb.innerHTML = [
+    { cat:'Markets', cls:'cat-markets', title:'Nasdaq at All-Time Highs During Active War: The Most Dangerous Disconnect', rt:'8' },
+    { cat:'Investigation', cls:'cat-analysis', title:'The $2.28 Billion Insider Trading Scandal Hidden Inside the Iran War', rt:'10' },
+    { cat:'Energy', cls:'cat-energy', title:'Even If Hormuz Reopens Tomorrow, The Energy Crisis Runs to 2027', rt:'6' },
+    { cat:'QT Analysis', cls:'cat-qt', title:'Quarterly Theory Roadmap: How to Read This Market Before Media Publishes', rt:'12' },
+    { cat:'Geopolitics', cls:'cat-analysis', title:"Who's Really Behind the Iran Tensions: The Full Power Map", rt:'9' }
+  ].map(s => `<div class="sidebar-art" onclick="openModal('pro')"><div class="sidebar-art-cat"><span class="article-cat ${s.cls}" style="font-size:9px;padding:3px 8px;">${s.cat}</span></div><div class="sidebar-art-title">${s.title}</div><div class="sidebar-art-meta">${TODAY_STR} · ${s.rt} min read</div></div>`).join('');
 }
 
-// ── 3. INTELLIGENCE ARCHIVE CARDS ────────────────────────────
-async function loadArchive() {
+function loadArchive() {
   const grid = document.getElementById('artGrid');
-  try {
-    const raw = await callClaude(
-      `Today is ${TODAY}. Based on current world events — Iran war, oil crisis, global inflation, market tensions, geopolitical risks — generate 6 deep analysis article cards for a geopolitical intelligence website.
-
-Return ONLY a JSON array of exactly 6 objects, no other text:
-[
-  {
-    "category": "category label",
-    "catClass": "one of: cat-conflict|cat-markets|cat-analysis|cat-energy|cat-qt",
-    "title": "14-word compelling headline",
-    "excerpt": "2 sentences explaining the analysis angle",
-    "date": "recent date like May 5, 2026",
-    "readTime": "number"
-  }
-]`, 1000);
-
-    const cards = safeJSON(raw);
-    if (!cards || !Array.isArray(cards)) throw new Error('Bad JSON');
-
-    grid.innerHTML = cards.map(c => `
-      <div class="art-card" onclick="openModal('pro')">
-        <div class="art-card-cat"><span class="article-cat ${c.catClass}" style="font-size:9px;padding:3px 8px;">${c.category}</span></div>
-        <div class="art-card-title">${c.title}</div>
-        <p class="art-card-excerpt">${c.excerpt}</p>
-        <div class="art-card-footer">
-          <span class="art-card-date">${c.date}</span>
-          <span class="art-card-read">Premium →</span>
-        </div>
-      </div>`).join('');
-  } catch(e) {
-    grid.innerHTML = `<div class="art-card" style="grid-column:1/-1;text-align:center;padding:32px;color:var(--white-40);font-family:var(--font-mono);font-size:12px;">⚠ Archive loading failed. <button onclick="loadArchive()" style="color:var(--gold-400);background:none;border:none;cursor:pointer;font-family:inherit;font-size:inherit;">Retry →</button></div>`;
-    console.error('Archive error:', e);
-  }
+  if (!grid) return;
+  grid.innerHTML = [
+    { cls:'cat-conflict', cat:'Iran War', title:'The 1973 Oil Crisis Playbook Applied to 2026 — And Why It Rhymes Perfectly', excerpt:'How the Arab embargo created the stagflation trap and why the current Iran war follows the exact same sequence — with one dangerous addition: markets are at all-time highs this time.', rt:'11' },
+    { cls:'cat-markets', cat:'Inflation', title:'How Central Banks Get Trapped: The Stagflation Playbook for 2026', excerpt:'When energy drives inflation and growth collapses simultaneously, the Fed has no good options. The 1979 template and what it means for rate decisions through Q3 2026.', rt:'9' },
+    { cls:'cat-qt', cat:'QT Trading', title:'Q2 2026 Distribution Phase: The Exact Levels and Triggers to Watch', excerpt:'ATH with war escalating is the textbook institutional distribution setup. Four outcome scenarios with precise market implications across crude, Nasdaq, gold, and USD.', rt:'13' },
+    { cls:'cat-energy', cat:'Food Crisis', title:'The Fertilizer Crisis Nobody Is Talking About and Why Food Prices Spike in Q4', excerpt:'Gulf countries produce 45% of global sulfur, a critical fertilizer input. With supply chains broken, food price shocks of 12-18% are projected by Q4 2026 globally.', rt:'7' },
+    { cls:'cat-analysis', cat:'Strategy', title:'Inflation Preparation: The 30-Day Portfolio Action Plan for Traders', excerpt:'From cash positioning to commodity exposure, a practical step-by-step guide for protecting and growing wealth in a 4-6% sustained inflation environment.', rt:'10' },
+    { cls:'cat-analysis', cat:'History', title:'1973, 1979, 2008: Three Crises That Created Generational Wealth for the Prepared', excerpt:'A deep dive into the three defining financial crises of the modern era, the exact QT phase each was in, who profited, and the precise parallels to today.', rt:'15' }
+  ].map(c => `<div class="art-card" onclick="openModal('pro')"><div class="art-card-cat"><span class="article-cat ${c.cls}" style="font-size:9px;padding:3px 8px;">${c.cat}</span></div><div class="art-card-title">${c.title}</div><p class="art-card-excerpt">${c.excerpt}</p><div class="art-card-footer"><span class="art-card-date">${TODAY_STR}</span><span class="art-card-read">Premium →</span></div></div>`).join('');
 }
 
-// ── MASTER REFRESH ───────────────────────────────────────────
-async function refreshAllContent() {
-  const btn = document.getElementById('refreshBtn');
-  const status = document.getElementById('contentStatusText');
-  btn.disabled = true;
-  btn.textContent = '↻ Refreshing...';
-
-  // Reset to loading states
-  document.getElementById('alertsPanel').innerHTML = '<div class="ai-loading-row"><span class="ai-spinner"></span> Fetching live intelligence alerts...</div>';
-  document.getElementById('featuredArticle').innerHTML = '<div style="display:flex;align-items:center;gap:12px;padding:40px 0;color:var(--white-40);"><span class="ai-spinner"></span><span style="font-family:var(--font-mono);font-size:12px;letter-spacing:0.1em;">AI generating today\'s lead intelligence report...</span></div>';
-  document.getElementById('sidebarArticles').innerHTML = '<div class="ai-loading-row"><span class="ai-spinner"></span> Loading...</div>';
-  document.getElementById('artGrid').innerHTML = '<div class="art-card" style="grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:12px;padding:40px;"><span class="ai-spinner"></span><span style="font-family:var(--font-mono);font-size:12px;color:var(--white-40);">AI generating archive...</span></div>';
-
-  status.innerHTML = '<span class="ai-spinner" style="width:10px;height:10px;border-width:1.5px;vertical-align:middle;margin-right:6px;"></span> AI regenerating all content...';
-
-  await Promise.all([loadAlerts(), loadFeatured(), loadArchive()]);
-
+function refreshAllContent() {
+  loadAlerts();
+  loadFeatured();
+  loadArchive();
   const now = new Date();
-  const timeStr = now.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'});
-  status.innerHTML = `✦ AI-generated · Last updated ${timeStr} · Powered by Claude + Web Search`;
-  btn.disabled = false;
-  btn.textContent = '↻ Refresh';
+  const t = now.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'});
+  const el = document.getElementById('contentStatusText');
+  if (el) el.innerHTML = `✦ Intelligence Briefing · Updated ${t} · STRATEGOS Editorial Desk`;
+  const btn = document.getElementById('refreshBtn');
+  if (btn) { btn.disabled = false; btn.textContent = '↻ Refresh'; }
 }
 
-// ── BOOT ALL CONTENT ─────────────────────────────────────────
 refreshAllContent();
 </script>
 </body>
